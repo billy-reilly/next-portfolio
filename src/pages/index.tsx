@@ -3,6 +3,7 @@ import Head from 'next/head';
 
 import {Header} from '../components/Header/Header';
 import {VerticalSpacer} from '../components/Spacers/VerticalSpacer/VerticalSpacer';
+import {HomepageMainContent} from '../components/HomepageMainContent/HomepageMainContent';
 
 const IndexPage: NextPage = () => {
     return (
@@ -15,6 +16,7 @@ const IndexPage: NextPage = () => {
             <VerticalSpacer />
             <Header />
             <VerticalSpacer />
+            <HomepageMainContent />
         </div>
     );
 };

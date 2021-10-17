@@ -1,0 +1,46 @@
+.mainContainer {
+    padding: 0 16px;
+}
+
+.heroContainer {
+    display: flex;
+    flex-direction: column;
+}
+
+@media (min-width: 1024px) {
+    .heroContainer {
+        flex-direction: row;
+    }
+}
+
+.heroColumn {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.heroGenerativeArtColumn {
+}
+
+.heroTextColumn {
+    padding-top: 16px;
+}
+
+@media (min-width: 1024px) {
+    .heroTextColumn {
+        padding: 16px;
+        padding-bottom: calc(24px + 1rem);
+    }
+}
+
+.heroTextTitle {
+    font-size: clamp(2.5rem, 4vw + 1rem, 3rem);
+    min-height: 0vw; /* trick to make safari recalculate font-size on resize */
+    margin: 24px 0;
+}
+
+.heroTextSubTitle {
+    font-size: clamp(1.8rem, 2.5vw + 0.5rem, 2rem);
+    min-height: 0vw; /* trick to make safari recalculate font-size on resize */
+}
