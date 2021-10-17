@@ -1,0 +1,21 @@
+.spacer {
+    height: 0;
+}
+
+@media (min-width: 400px) {
+    .spacer {
+        height: 8px;
+    }
+}
+
+@media (min-width: 640px) {
+    .spacer {
+        height: 16px;
+    }
+}
+
+@media (min-width: 768px) {
+    .spacer {
+        height: 24px;
+    }
+}

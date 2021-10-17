@@ -1,0 +1,42 @@
+.container {
+    display: flex;
+    padding-left: 16px;
+}
+
+.button {
+    height: 24px;
+    width: 24px;
+    margin-right: 8px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 0px;
+    position: relative;
+}
+
+.button:last-of-type {
+    margin-right: 0;
+}
+
+@media (min-width: 400px) {
+    .button {
+        margin-right: 12px;
+    }
+}
+
+@media (min-width: 640px) {
+    .button {
+        margin-right: 16px;
+    }
+}
+
+.activeButton:after {
+    content: '';
+    border: 2px solid black;
+    height: calc(100% + 6px);
+    width: calc(100% + 6px);
+    top: 50%;
+    left: 50%;
+    position: absolute;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+}

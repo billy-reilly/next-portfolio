@@ -14,3 +14,65 @@ a {
 * {
     box-sizing: border-box;
 }
+
+p {
+    margin-block-start: 1rem;
+    margin-block-end: 1rem;
+}
+
+/* CSS Variables */
+
+:root {
+    --primary-hue: 210deg;
+
+    --primary-color: hsl(var(--primary-hue) 100% 56%);
+
+    --breakpoint--mobile-lg: 400px;
+    --breakpoint--tablet-sm: 640px;
+    --breakpoint--tablet-md: 768px;
+    --breakpoint--laptop-sm: 1024px;
+    --breakpoint--desktop-sm: 1280px;
+    --breakpoint--desktop-lg: 1536px;
+
+    /*
+        TODO:
+        - spacing
+        - fonts
+    */
+}
+
+/* Utility classes */
+
+.constrainedWidth {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.fullBleedWidth {
+    max-width: 1275px;
+    margin: 0 auto;
+}
+
+.visually-hidden:not(:focus):not(:active) {
+    /* https://www.scottohara.me/blog/2017/04/14/inclusively-hidden.html */
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    height: 1px;
+    overflow: hidden;
+    position: absolute;
+    white-space: nowrap;
+    width: 1px;
+}
+
+.primaryLink {
+    text-decoration: underline;
+    text-decoration-color: var(--primary-color);
+    text-decoration-thickness: 0.15em;
+}
+
+/* TODO */
+/* 
+::selection {
+    background-color: var(--primary-color);
+    color: white;
+} */
