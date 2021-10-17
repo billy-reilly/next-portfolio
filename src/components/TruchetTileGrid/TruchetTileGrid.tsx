@@ -1,93 +1,71 @@
 import React from 'react';
 import style from './TruchetTileGrid.module.css';
 
-// TODO
-// const MIN_TILE_SIZE = 100;
-// const MAX_TILE_SIZE = 200;
+import {selectRandomArrayElement} from '../../utils/random';
+import {circularPatternTileDrawers} from './patternDrawers/circular';
+import {triangularPatternTileDrawers} from './patternDrawers/triangular';
+import {pixelatedPatternTileDrawers} from './patternDrawers/pixelated';
+import {diagonalPatternTileDrawers} from './patternDrawers/diagonal';
 
 const NUMBER_OF_COLUMNS = 10;
 const NUMBER_OF_ROWs = 10;
 
-// TODO
-// enum Patterns {
-//     CIRCULAR = 'circular',
-//     TRIANGULAR = 'triangular'
-// }
+enum Pattern {
+    CIRCULAR = 'circular',
+    PIXELATED = 'pixelated',
+    DIAGONAL = 'diagonal',
+    TRIANGULAR = 'triangular'
+}
 
-const drawTileA = (
-    ctx: CanvasRenderingContext2D,
-    tileSize: number,
-    topLeftXCoord: number,
-    topLeftYCoord: number
-): void => {
-    ctx.beginPath();
-    ctx.moveTo(topLeftXCoord + tileSize, topLeftYCoord + tileSize / 2);
-    ctx.arc(
-        topLeftXCoord + tileSize,
-        topLeftYCoord,
-        tileSize / 2,
-        Math.PI / 2,
-        Math.PI
-    );
-    ctx.stroke();
+const patterns = Object.values(Pattern);
 
-    ctx.beginPath();
-    ctx.moveTo(topLeftXCoord, topLeftYCoord + tileSize / 2);
-    ctx.arc(
-        topLeftXCoord,
-        topLeftYCoord + tileSize,
-        tileSize / 2,
-        (3 * Math.PI) / 2,
-        0
-    );
-    ctx.stroke();
-};
+interface TileDrawerArgs {
+    ctx: CanvasRenderingContext2D;
+    tileSize: number;
+    topLeftXCoord: number;
+    topLeftYCoord: number;
+}
 
-const drawTileB = (
-    ctx: CanvasRenderingContext2D,
-    tileSize: number,
-    topLeftXCoord: number,
-    topLeftYCoord: number
-): void => {
-    ctx.beginPath();
-    ctx.moveTo(topLeftXCoord + tileSize / 2, topLeftYCoord);
-    ctx.arc(topLeftXCoord, topLeftYCoord, tileSize / 2, 0, Math.PI / 2);
-    ctx.stroke();
+export type TileDrawer = (args: TileDrawerArgs) => void;
 
-    ctx.beginPath();
-    ctx.moveTo(topLeftXCoord + tileSize / 2, topLeftYCoord + tileSize);
-    ctx.arc(
-        topLeftXCoord + tileSize,
-        topLeftYCoord + tileSize,
-        tileSize / 2,
-        Math.PI,
-        (3 * Math.PI) / 2
-    );
-    ctx.stroke();
+const getPatternDrawers = (pattern: Pattern): TileDrawer[] => {
+    if (pattern === Pattern.CIRCULAR) {
+        return circularPatternTileDrawers;
+    }
+    if (pattern === Pattern.PIXELATED) {
+        return pixelatedPatternTileDrawers;
+    }
+    if (pattern === Pattern.DIAGONAL) {
+        return diagonalPatternTileDrawers;
+    }
+    return triangularPatternTileDrawers;
 };
 
 const draw = (
     ctx: CanvasRenderingContext2D,
     canvasWidth: number,
-    tileWidth: number,
-    gridTileStartingCoords: [number, number][]
+    tileSize: number,
+    gridTileStartingCoords: [number, number][],
+    pattern: Pattern
 ): void => {
     if (ctx) {
         ctx.lineWidth = Math.ceil(canvasWidth / 50);
         ctx.strokeStyle = 'black';
         gridTileStartingCoords.forEach(([x, y]) => {
-            if (Math.random() > 0.5) {
-                drawTileA(ctx, tileWidth, x, y);
-            } else {
-                drawTileB(ctx, tileWidth, x, y);
-            }
+            const patternDrawers = getPatternDrawers(pattern);
+            selectRandomArrayElement(patternDrawers)({
+                ctx,
+                tileSize,
+                topLeftXCoord: x,
+                topLeftYCoord: y
+            });
         });
     }
 };
 
 export const TruchetTileGrid: React.FC = () => {
     const canvasRef = React.useRef<HTMLCanvasElement>(null);
-
+    const [pattern, setPattern] = React.useState<Pattern>(Pattern.CIRCULAR);
     const [availableWidth, setAvailableWidth] = React.useState<
         number | undefined
     >(undefined);
@@ -136,20 +114,29 @@ export const TruchetTileGrid: React.FC = () => {
                 return acc.concat(gridTileStartingXCoords.map((x) => [x, y]));
             }, []);
 
-            draw(ctx, availableWidth, tileSize, gridTileStartingCoords);
+            draw(
+                ctx,
+                availableWidth,
+                tileSize,
+                gridTileStartingCoords,
+                pattern
+            );
         }
-    }, [canvasRef, availableWidth]);
+    }, [canvasRef, availableWidth, pattern]);
+
+    const handleClick = React.useCallback(() => {
+        const currentIndex = patterns.indexOf(pattern);
+        if (currentIndex < patterns.length - 1) {
+            setPattern(patterns[currentIndex + 1]);
+        } else {
+            setPattern(patterns[0]);
+        }
+    }, [pattern, setPattern]);
 
     return (
         <div>
             <div className={style.patternContainer}>
-                <button
-                    className={style.canvasButton}
-                    onClick={() => {
-                        // TODO: draw new pattern
-                        console.log('click');
-                    }}
-                >
+                <button className={style.canvasButton} onClick={handleClick}>
                     <div className={style.canvasHeightConstrainer}>
                         <canvas
                             role="img"
